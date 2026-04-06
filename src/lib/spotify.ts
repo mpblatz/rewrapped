@@ -149,6 +149,7 @@ export interface ListeningStatsData {
   mostActiveHour: string | null;
   totalTracksAnalyzed: number;
   genreBreakdown: { genre: string; percentage: number }[];
+  dayOfWeekBreakdown: { day: string; count: number; percentage: number }[] | null;
 }
 
 export function deriveListeningStats(
@@ -224,6 +225,22 @@ export function deriveListeningStats(
     }
   }
 
+  // Day of week breakdown from recently played
+  const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  let dayOfWeekBreakdown: ListeningStatsData["dayOfWeekBreakdown"] = null;
+  if (recentlyPlayed.length > 0) {
+    const dayCounts = new Array(7).fill(0);
+    for (const item of recentlyPlayed) {
+      dayCounts[new Date(item.played_at).getDay()]++;
+    }
+    const maxCount = Math.max(...dayCounts);
+    dayOfWeekBreakdown = DAYS.map((day, i) => ({
+      day,
+      count: dayCounts[i],
+      percentage: maxCount > 0 ? Math.round((dayCounts[i] / maxCount) * 100) : 0,
+    }));
+  }
+
   return {
     topGenres: topGenres.slice(0, 10),
     topDecade,
@@ -232,5 +249,6 @@ export function deriveListeningStats(
     mostActiveHour,
     totalTracksAnalyzed: topTracks.length,
     genreBreakdown,
+    dayOfWeekBreakdown,
   };
 }

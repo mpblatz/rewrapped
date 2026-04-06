@@ -120,6 +120,32 @@ export default function ListeningStats({ accessToken, timeRange }: Props) {
         </div>
       )}
 
+      {/* Day of week breakdown */}
+      {data.dayOfWeekBreakdown && (
+        <div className="bg-card-bg rounded-xl border border-border p-5 animate-in" style={{ animationDelay: "280ms" }}>
+          <h3 className="text-[12px] font-bold text-text mb-4">
+            Listening by day
+          </h3>
+          <div className="flex items-end justify-between gap-1.5 h-24">
+            {data.dayOfWeekBreakdown.map((d) => (
+              <div key={d.day} className="flex-1 flex flex-col items-center gap-1.5">
+                <div className="w-full flex flex-col justify-end h-16">
+                  <div
+                    className={`w-full rounded-sm transition-all duration-700 ease-out ${
+                      d.percentage === 100 ? "bg-accent" : "bg-accent-lighter"
+                    }`}
+                    style={{ height: `${Math.max(d.percentage, 4)}%` }}
+                  />
+                </div>
+                <span className="text-[10px] text-text-faint font-medium">
+                  {d.day}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Genre cloud */}
       {data.topGenres.length > 0 && (
         <div className="bg-card-bg rounded-xl border border-border p-5 animate-in" style={{ animationDelay: "320ms" }}>
