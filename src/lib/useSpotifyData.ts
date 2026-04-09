@@ -2,13 +2,15 @@ import { useState, useEffect, useCallback } from "react";
 
 export function useSpotifyData<T>(
   fetcher: () => Promise<T>,
-  deps: unknown[] = []
+  deps: unknown[] = [],
+  options?: { skip?: boolean }
 ) {
   const [data, setData] = useState<T | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!options?.skip);
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
+    if (options?.skip) return;
     setLoading(true);
     setError(null);
     try {
@@ -20,7 +22,7 @@ export function useSpotifyData<T>(
       setLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, deps);
+  }, [...deps, options?.skip]);
 
   useEffect(() => {
     load();

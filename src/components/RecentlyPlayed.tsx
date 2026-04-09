@@ -8,16 +8,20 @@ import ErrorMessage from "./ErrorMessage";
 interface Props {
   accessToken: string;
   timeRange: TimeRange;
+  demoData?: RecentlyPlayedItem[];
 }
 
-export default function RecentlyPlayed({ accessToken }: Props) {
-  const { data, loading, error, retry } = useSpotifyData<RecentlyPlayedItem[]>(
+export default function RecentlyPlayed({ accessToken, demoData }: Props) {
+  const { data: fetchedData, loading, error, retry } = useSpotifyData<RecentlyPlayedItem[]>(
     () => getRecentlyPlayed(accessToken),
-    [accessToken]
+    [accessToken],
+    { skip: !!demoData }
   );
 
-  if (loading) return <ListSkeleton count={10} />;
-  if (error) return <ErrorMessage message={error} onRetry={retry} />;
+  const data = demoData || fetchedData;
+
+  if (!demoData && loading) return <ListSkeleton count={10} />;
+  if (!demoData && error) return <ErrorMessage message={error} onRetry={retry} />;
   if (!data?.length) return <EmptyState />;
 
   // Group by relative day

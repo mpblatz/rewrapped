@@ -7,16 +7,20 @@ import ErrorMessage from "./ErrorMessage";
 
 interface Props {
   accessToken: string;
+  demoData?: SpotifyPlaylist[];
 }
 
-export default function Playlists({ accessToken }: Props) {
-  const { data, loading, error, retry } = useSpotifyData<SpotifyPlaylist[]>(
+export default function Playlists({ accessToken, demoData }: Props) {
+  const { data: fetchedData, loading, error, retry } = useSpotifyData<SpotifyPlaylist[]>(
     () => getPlaylists(accessToken),
-    [accessToken]
+    [accessToken],
+    { skip: !!demoData }
   );
 
-  if (loading) return <GridSkeleton count={9} />;
-  if (error) return <ErrorMessage message={error} onRetry={retry} />;
+  const data = demoData || fetchedData;
+
+  if (!demoData && loading) return <GridSkeleton count={9} />;
+  if (!demoData && error) return <ErrorMessage message={error} onRetry={retry} />;
   if (!data?.length) return <EmptyState />;
 
   return (

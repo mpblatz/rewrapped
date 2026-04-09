@@ -8,16 +8,20 @@ import ErrorMessage from "./ErrorMessage";
 interface Props {
   accessToken: string;
   timeRange: TimeRange;
+  demoData?: SpotifyTrack[];
 }
 
-export default function TopSongs({ accessToken, timeRange }: Props) {
-  const { data, loading, error, retry } = useSpotifyData<SpotifyTrack[]>(
+export default function TopSongs({ accessToken, timeRange, demoData }: Props) {
+  const { data: fetchedData, loading, error, retry } = useSpotifyData<SpotifyTrack[]>(
     () => getTopTracks(accessToken, timeRange),
-    [accessToken, timeRange]
+    [accessToken, timeRange],
+    { skip: !!demoData }
   );
 
-  if (loading) return <ListSkeleton count={10} />;
-  if (error) return <ErrorMessage message={error} onRetry={retry} />;
+  const data = demoData || fetchedData;
+
+  if (!demoData && loading) return <ListSkeleton count={10} />;
+  if (!demoData && error) return <ErrorMessage message={error} onRetry={retry} />;
   if (!data?.length) return <EmptyState />;
 
   return (

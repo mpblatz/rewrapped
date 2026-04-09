@@ -15,10 +15,11 @@ import ErrorMessage from "./ErrorMessage";
 interface Props {
   accessToken: string;
   timeRange: TimeRange;
+  demoData?: ListeningStatsData;
 }
 
-export default function ListeningStats({ accessToken, timeRange }: Props) {
-  const { data, loading, error, retry } = useSpotifyData<ListeningStatsData>(
+export default function ListeningStats({ accessToken, timeRange, demoData }: Props) {
+  const { data: fetchedData, loading, error, retry } = useSpotifyData<ListeningStatsData>(
     async () => {
       const [artists, tracks, recent] = await Promise.all([
         getTopArtists(accessToken, timeRange),
@@ -27,11 +28,14 @@ export default function ListeningStats({ accessToken, timeRange }: Props) {
       ]);
       return deriveListeningStats(artists, tracks, recent);
     },
-    [accessToken, timeRange]
+    [accessToken, timeRange],
+    { skip: !!demoData }
   );
 
-  if (loading) return <StatsGridSkeleton />;
-  if (error) return <ErrorMessage message={error} onRetry={retry} />;
+  const data = demoData || fetchedData;
+
+  if (!demoData && loading) return <StatsGridSkeleton />;
+  if (!demoData && error) return <ErrorMessage message={error} onRetry={retry} />;
   if (!data) return null;
 
   return (

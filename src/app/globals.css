@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@theme inline {
+@theme {
     --color-bg: #f5f7f5;
     --color-card-bg: #ffffff;
     --color-text: #1a1a1a;
@@ -20,11 +20,45 @@
     --color-btn-bg: rgba(0, 0, 0, 0.03);
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
     --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.07), 0 2px 8px rgba(0, 0, 0, 0.03);
+    --shadow-toggle: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+:root {
+    --header-bg: rgba(245, 247, 245, 0.8);
+    --toggle-bg: rgba(0, 0, 0, 0.04);
+    --toggle-active: #fff;
+}
+
+.dark {
+    --color-bg: #0a0f0a;
+    --color-card-bg: #111611;
+    --color-text: #e8ece8;
+    --color-text-muted: #8a9488;
+    --color-text-faint: #5a6558;
+    --color-text-very-faint: #3a4338;
+    --color-accent: #40916c;
+    --color-accent-light: #52b788;
+    --color-accent-lighter: #1b4332;
+    --color-accent-bg: #1a2e1a;
+    --color-link: #52b788;
+    --color-link-hover: #74c69d;
+    --color-image-bg: #1a2218;
+    --color-border: rgba(255, 255, 255, 0.06);
+    --color-border-hover: rgba(255, 255, 255, 0.12);
+    --color-divider: rgba(255, 255, 255, 0.04);
+    --color-btn-bg: rgba(255, 255, 255, 0.04);
+    --shadow-sm: none;
+    --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.3);
+    --shadow-toggle: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --header-bg: rgba(10, 15, 10, 0.8);
+    --toggle-bg: rgba(255, 255, 255, 0.06);
+    --toggle-active: rgba(255, 255, 255, 0.12);
 }
 
 body {
     background: var(--color-bg);
     color: var(--color-text);
+    transition: background 0.35s ease, color 0.35s ease;
 }
 
 /* Staggered fade-in */

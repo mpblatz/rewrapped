@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
   const error = url.searchParams.get("error");
 
   if (error) {
-    return NextResponse.redirect(`${BASE_URL}/?error=${error}`);
+    return NextResponse.redirect(`${BASE_URL}/dashboard?error=${error}`);
   }
 
   // Verify state
@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
   cookieStore.delete("oauth_state");
 
   if (!code || !state || state !== storedState) {
-    return NextResponse.redirect(`${BASE_URL}/?error=state_mismatch`);
+    return NextResponse.redirect(`${BASE_URL}/dashboard?error=state_mismatch`);
   }
 
   // Exchange code for tokens
@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
 
   if (!tokenRes.ok) {
     console.error("Token exchange failed:", tokenData);
-    return NextResponse.redirect(`${BASE_URL}/?error=token_exchange`);
+    return NextResponse.redirect(`${BASE_URL}/dashboard?error=token_exchange`);
   }
 
   // Fetch user profile

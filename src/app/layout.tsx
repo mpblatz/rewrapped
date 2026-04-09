@@ -2,6 +2,7 @@
 
 import { IBM_Plex_Mono } from "next/font/google";
 import { SessionContext, useSessionFetch } from "@/lib/useSession";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
 
 const ibmPlexMono = IBM_Plex_Mono({
@@ -18,7 +19,7 @@ export default function RootLayout({
   const sessionValue = useSessionFetch();
 
   return (
-    <html lang="en" className={`${ibmPlexMono.variable} h-full antialiased`}>
+    <html lang="en" suppressHydrationWarning className={`${ibmPlexMono.variable} h-full antialiased`}>
       <head>
         <title>Rewrapped — Your Spotify Listening Story</title>
         <meta
@@ -30,9 +31,16 @@ export default function RootLayout({
         className="min-h-full flex flex-col bg-bg text-text"
         style={{ fontFamily: "var(--font-mono), monospace" }}
       >
-        <SessionContext.Provider value={sessionValue}>
-          {children}
-        </SessionContext.Provider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          storageKey="rewrapped-theme"
+        >
+          <SessionContext.Provider value={sessionValue}>
+            {children}
+          </SessionContext.Provider>
+        </ThemeProvider>
       </body>
     </html>
   );
